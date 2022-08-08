@@ -4,6 +4,7 @@ from nltk.corpus import stopwords
 import pandas as pd
 import uuid
 from tqdm import tqdm
+import re
 
 from lemmagen3 import Lemmatizer
 
@@ -20,7 +21,7 @@ def filter_text(content):
     return content_filtered
 
 
-def main():
+def prepare_data_for_doc2vec():
     samples = []
 
     # get KAS
@@ -60,11 +61,50 @@ def main():
     # export
     df = pd.DataFrame(samples)
     df = df.sample(frac=1).reset_index(drop=True)
-    df.to_json('data/metamodel.jsonl', lines=True, orient='records', force_ascii=False)
+    df.to_json('data/doc2vec-training.jsonl', lines=True, orient='records', force_ascii=False)
 
+
+def prepare_data_for_metamodel():
+    samples = []
+
+    # get KAS texts and abstracts
+    abstracts = '/home/azagar/myfiles/kas_final/final/kas.abstracts'
+    bodies = "/home/azagar/myfiles/kas_final/final/kas.corpus/kas.txt"
+    for root, dirs, files in os.walk(bodies, topdown=False):
+        for name in tqdm(files):
+            if ".txt" in name:
+                file_idx = re.search('\d+', name).group(0)
+
+                body_path = os.path.join(root, name)
+                abstract_path = os.path.join(abstracts, file_idx[-3:], f'kas-{file_idx}-abs-sl.txt')
+                if os.path.isfile(abstract_path):
+                    with open(body_path, 'r') as b, open(abstract_path, 'r') as a:
+                        body = b.read()
+                        abstract = a.read()
+
+                        samples.append({'text': body, 'abstract': abstract, 'id': str(uuid.uuid4()), 'source': 'kas'})
+
+    # get STA+ASN
+    root = '/home/azagar/myfiles/t5/data/asn-summary-plus-sta-lead'
+    for mode in ['train.jsonl', 'val.jsonl', 'test.jsonl']:
+        file = os.path.join(root, mode)
+        df = pd.read_json(file, lines=True)
+        for text, abstract in tqdm(zip(df['text'], df['lead']), total=len(df)):
+            samples.append({'text': text, 'abstract': abstract, 'id': str(uuid.uuid4()), 'source': 'news'})
+
+    # get SURS
+    df = pd.read_json('data/surs.jsonl', lines=True)
+    for text, abstract in tqdm(zip(df['KomentarSLO'], df['PovzetekSLO']), total=len(df)):
+        samples.append({'text': text, 'abstract': abstract, 'id': str(uuid.uuid4()), 'source': 'surs'})
+
+    # export
+    df = pd.DataFrame(samples)
+    df = df.sample(frac=1).reset_index(drop=True)
+    df.to_json('data/metamodel-training.jsonl', lines=True, orient='records', force_ascii=False)
 
 if __name__ == '__main__':
     lem_sl = Lemmatizer('sl')
     stopwords = set(stopwords.words('slovene'))
-    main()
+    # prepare_data_for_doc2vec()
+    prepare_data_for_metamodel()
 
