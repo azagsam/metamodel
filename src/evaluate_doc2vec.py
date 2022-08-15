@@ -3,29 +3,32 @@ from gensim.models.doc2vec import TaggedDocument, Doc2Vec
 from sklearn.cluster import DBSCAN
 from sklearn.decomposition import PCA
 import time
+from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 from collections import Counter
 
 # get and prepare data
 print('Retrieving data ... ')
-df = pd.read_json('data/metamodel.jsonl', lines=True)
+df = pd.read_json('/home/azagar/myfiles/metamodel/data/doc2vec-training.jsonl', lines=True)
 
 # documents = df['text'].to_list()[:10000]
 # del df
 
 # load model
-fname = "model/model-large/metamodel"
+fname = "/home/azagar/myfiles/metamodel/model/model-large/metamodel"
 model = Doc2Vec.load(fname)
-# doc_vectors = model.dv.vectors[:10000]
 
-# infer vector for a new text
-for n in list(range(100)):
-    print('\n'*3)
-    new_vector = model.infer_vector(df['text'][n].split())
-    print(df['text'][n])
-    for idx, score in model.dv.most_similar([new_vector], topn=5):
+vectors = np.array([model.infer_vector(df['text'][n].split()) for n in list(range(50000))])
+cos_vectors = cosine_similarity(vectors, vectors)
+for idx, cos_vec in enumerate(cos_vectors):
+    print('\n' * 3)
+    indices = np.argsort(cos_vec)[-5:]
+    print('SOURCE', df['text'][idx])
+    for idx_target in indices:
         print('\n')
-        print(idx, score, df['text'][idx])
+        print(df['text'][idx_target])
+    if idx == 5:
+        break
 
 
 model.wv.most_similar('računalnik', topn=10)

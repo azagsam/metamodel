@@ -40,3 +40,28 @@ stages:
     - path: data/metamodel-training.jsonl
       md5: c2d0652ad342627e95f23768d1bc942a
       size: 8857204468
+  train-d2v:
+    cmd: python src/train_doc2vec.py /home/azagar/myfiles/metamodel/data/doc2vec-training.jsonl
+      /home/azagar/myfiles/metamodel/model/doc2vec-large
+    deps:
+    - path: data/doc2vec-training.jsonl
+      md5: 6f23f068915b24923ad6051f58e987fb
+      size: 7956779558
+    - path: src/train_doc2vec.py
+      md5: ef4619555f1c53226c76179ce0c235ec
+      size: 1718
+    params:
+      params.yaml:
+        train-d2v.epochs: 5
+        train-d2v.max_vocab_size: 100000
+        train-d2v.min_count: 1
+        train-d2v.vector_size: 256
+        train-d2v.window: 5
+        train-d2v.workers: 16
+    outs:
+    - path: d2v-metrics.json
+      md5: 395c10af666a6d926961450b5f9afb2b
+      size: 13
+    - path: model/doc2vec-large
+      md5: 5bfae20d9d9ecb825f4e22dc6530b6b9
+      size: 5433563

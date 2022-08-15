@@ -1,9 +1,10 @@
 stages:
+  # in the both stages, kas dependencies are removed because dvc doesn't work well with a lot of small files
   prepare-data-d2v:
     cmd: python src/get_data.py --model d2v
     deps:
       - /home/azagar/myfiles/t5/data/asn-summary-plus-sta-lead
-      - /home/azagar/myfiles/metamodel/data/surs.jsonl
+      - data/surs.jsonl
     outs:
       - /home/azagar/myfiles/metamodel/data/doc2vec-training.jsonl
 
@@ -11,6 +12,24 @@ stages:
     cmd: python src/get_data.py --model metamodel
     deps:
       - /home/azagar/myfiles/t5/data/asn-summary-plus-sta-lead
-      - /home/azagar/myfiles/metamodel/data/surs.jsonl
+      - data/surs.jsonl
     outs:
       - /home/azagar/myfiles/metamodel/data/metamodel-training.jsonl
+
+  train-d2v:
+    cmd: python src/train_doc2vec.py /home/azagar/myfiles/metamodel/data/doc2vec-training.jsonl /home/azagar/myfiles/metamodel/model/doc2vec-large
+    deps:
+      - data/doc2vec-training.jsonl
+      - src/train_doc2vec.py  # todo in the previous two stages, the scripts should be also present in the "deps"
+    params:
+      - train-d2v.max_vocab_size
+      - train-d2v.vector_size
+      - train-d2v.window
+      - train-d2v.min_count
+      - train-d2v.workers
+      - train-d2v.epochs
+    metrics:
+      - d2v-metrics.json:
+          cache: false
+    outs:
+      - model/doc2vec-large
