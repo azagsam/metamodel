@@ -1,12 +1,15 @@
+import argparse
 import os
-import string
-from nltk.corpus import stopwords
-import pandas as pd
-import uuid
-from tqdm import tqdm
 import re
+import string
+import uuid
 
+import pandas as pd
 from lemmagen3 import Lemmatizer
+from nltk.corpus import stopwords
+from tqdm import tqdm
+
+from utils import load_params
 
 
 def filter_text(content):
@@ -50,7 +53,7 @@ def prepare_data_for_doc2vec():
             samples.append({'text': content_filtered, 'id': str(uuid.uuid4()), 'source': 'news'})
 
     # get SURS
-    df = pd.read_json('data/surs.jsonl', lines=True)
+    df = pd.read_json('/home/azagar/myfiles/metamodel/data/surs.jsonl', lines=True)
     for content in tqdm(df['KomentarSLO'].to_list()):
         try:
             content_filtered = filter_text(content)
@@ -93,7 +96,7 @@ def prepare_data_for_metamodel():
             samples.append({'text': text, 'abstract': abstract, 'id': str(uuid.uuid4()), 'source': 'news'})
 
     # get SURS
-    df = pd.read_json('data/surs.jsonl', lines=True)
+    df = pd.read_json('/home/azagar/myfiles/metamodel/data/surs.jsonl', lines=True)
     for text, abstract in tqdm(zip(df['KomentarSLO'], df['PovzetekSLO']), total=len(df)):
         samples.append({'text': text, 'abstract': abstract, 'id': str(uuid.uuid4()), 'source': 'surs'})
 
@@ -102,9 +105,23 @@ def prepare_data_for_metamodel():
     df = df.sample(frac=1).reset_index(drop=True)
     df.to_json('data/metamodel-training.jsonl', lines=True, orient='records', force_ascii=False)
 
+
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='prepare data for both models')
+    parser.add_argument('--model', type=str, help='text to generate a summary from')
+
+    args = parser.parse_args()
+
+    model = args.model
+
+    # load external tools
     lem_sl = Lemmatizer('sl')
     stopwords = set(stopwords.words('slovene'))
-    # prepare_data_for_doc2vec()
-    prepare_data_for_metamodel()
 
+    # start additional parameters
+    if model == 'd2v':
+        params = load_params()["prepare-data-d2v"]
+        prepare_data_for_doc2vec()
+    elif model == 'metamodel':
+        params = load_params()["prepare-data-metamodel"]
+        prepare_data_for_metamodel()
