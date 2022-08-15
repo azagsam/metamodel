@@ -1,0 +1,42 @@
+schema: '2.0'
+stages:
+  prepare-data-d2v:
+    cmd: python src/get_data.py --model d2v
+    deps:
+    - path: /home/azagar/myfiles/kas_final/final/kas.corpus/kas.txt
+      md5: 3d102d621b7d5fdc4edcb02b9a362a7d.dir
+      size: 9026132440
+      nfiles: 82308
+    - path: /home/azagar/myfiles/t5/data/asn-summary-plus-sta-lead
+      md5: 51efe69580dffb11ae0df22f04e5c46c.dir
+      size: 1484937476
+      nfiles: 3
+    - path: data/surs.jsonl
+      md5: 8a2b6edaffd6ff94fde2eed5dd917ca8
+      size: 8947469
+    outs:
+    - path: data/doc2vec-training.jsonl
+      md5: 6f23f068915b24923ad6051f58e987fb
+      size: 7956779558
+  prepare-data-metamodel:
+    cmd: python src/get_data.py --model metamodel
+    deps:
+    - path: /home/azagar/myfiles/kas_final/final/kas.abstracts
+      md5: 505422d80d54a10b17099888c8a3a8e4.dir
+      size: 225029331
+      nfiles: 125203
+    - path: /home/azagar/myfiles/kas_final/final/kas.corpus/kas.txt
+      md5: 3d102d621b7d5fdc4edcb02b9a362a7d.dir
+      size: 9026132440
+      nfiles: 82308
+    - path: /home/azagar/myfiles/t5/data/asn-summary-plus-sta-lead
+      md5: 51efe69580dffb11ae0df22f04e5c46c.dir
+      size: 1484937476
+      nfiles: 3
+    - path: data/surs.jsonl
+      md5: 8a2b6edaffd6ff94fde2eed5dd917ca8
+      size: 8947469
+    outs:
+    - path: data/metamodel-training.jsonl
+      md5: c2d0652ad342627e95f23768d1bc942a
+      size: 8857204468
