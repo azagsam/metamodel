@@ -64,7 +64,7 @@ def prepare_data_for_doc2vec():
     # export
     df = pd.DataFrame(samples)
     df = df.sample(frac=1).reset_index(drop=True)
-    df.to_json('data/doc2vec-training.jsonl', lines=True, orient='records', force_ascii=False)
+    df.to_json('/home/azagar/myfiles/metamodel/data/doc2vec-training.jsonl', lines=True, orient='records', force_ascii=False)
 
 
 def prepare_data_for_metamodel():
@@ -103,7 +103,7 @@ def prepare_data_for_metamodel():
     # export
     df = pd.DataFrame(samples)
     df = df.sample(frac=1).reset_index(drop=True)
-    df.to_json('data/metamodel-training.jsonl', lines=True, orient='records', force_ascii=False)
+    df.to_json('/home/azagar/myfiles/metamodel/data/metamodel-training.jsonl', lines=True, orient='records', force_ascii=False)
 
 
 if __name__ == '__main__':

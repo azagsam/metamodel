@@ -16,4 +16,4 @@ stages:
       - /home/azagar/myfiles/t5/data/asn-summary-plus-sta-lead
       - /home/azagar/myfiles/metamodel/data/surs.jsonl
     outs:
-      - data/metamodel-training.jsonl
+      - /home/azagar/myfiles/data/metamodel-training.jsonl
