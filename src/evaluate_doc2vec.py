@@ -6,10 +6,12 @@ import time
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 from collections import Counter
+from tqdm import tqdm
 
 # get and prepare data
 print('Retrieving data ... ')
 df = pd.read_json('/home/azagar/myfiles/metamodel/data/doc2vec-training.jsonl', lines=True)
+print('Retrieved.')
 
 # documents = df['text'].to_list()[:10000]
 # del df
@@ -18,20 +20,20 @@ df = pd.read_json('/home/azagar/myfiles/metamodel/data/doc2vec-training.jsonl', 
 fname = "/home/azagar/myfiles/metamodel/model/model-large/metamodel"
 model = Doc2Vec.load(fname)
 
-vectors = np.array([model.infer_vector(df['text'][n].split()) for n in list(range(50000))])
+vectors = np.array([model.infer_vector(df['text'][n].split()) for n in tqdm(list(range(10000)))])
 cos_vectors = cosine_similarity(vectors, vectors)
 for idx, cos_vec in enumerate(cos_vectors):
     print('\n' * 3)
-    indices = np.argsort(cos_vec)[-5:]
+    indices = np.argsort(cos_vec)[-3:-1]
     print('SOURCE', df['text'][idx])
     for idx_target in indices:
         print('\n')
         print(df['text'][idx_target])
-    if idx == 5:
+    if idx == 25:
         break
 
 
-model.wv.most_similar('računalnik', topn=10)
+print(model.wv.most_similar('računalnik', topn=10))
 
 # # cluster and write to disk
 # eps = 0.3
