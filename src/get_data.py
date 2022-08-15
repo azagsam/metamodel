@@ -9,8 +9,6 @@ from lemmagen3 import Lemmatizer
 from nltk.corpus import stopwords
 from tqdm import tqdm
 
-from utils import load_params
-
 
 def filter_text(content):
     content_filtered = []
@@ -64,7 +62,7 @@ def prepare_data_for_doc2vec():
     # export
     df = pd.DataFrame(samples)
     df = df.sample(frac=1).reset_index(drop=True)
-    df.to_json('data/doc2vec-training.jsonl', lines=True, orient='records', force_ascii=False)
+    df.to_json('/home/azagar/myfiles/metamodel/data/doc2vec-training.jsonl', lines=True, orient='records', force_ascii=False)
 
 
 def prepare_data_for_metamodel():
@@ -103,7 +101,7 @@ def prepare_data_for_metamodel():
     # export
     df = pd.DataFrame(samples)
     df = df.sample(frac=1).reset_index(drop=True)
-    df.to_json('data/metamodel-training.jsonl', lines=True, orient='records', force_ascii=False)
+    df.to_json('/home/azagar/myfiles/metamodel/data/metamodel-training.jsonl', lines=True, orient='records', force_ascii=False)
 
 
 if __name__ == '__main__':
@@ -120,8 +118,6 @@ if __name__ == '__main__':
 
     # start additional parameters
     if model == 'd2v':
-        params = load_params()["prepare-data-d2v"]
         prepare_data_for_doc2vec()
     elif model == 'metamodel':
-        params = load_params()["prepare-data-metamodel"]
         prepare_data_for_metamodel()
