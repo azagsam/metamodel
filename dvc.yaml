@@ -6,7 +6,7 @@ stages:
       - /home/azagar/myfiles/t5/data/asn-summary-plus-sta-lead
       - /home/azagar/myfiles/metamodel/data/surs.jsonl
     outs:
-      - /home/azagar/myfiles/data/metamodel/doc2vec-training.jsonl
+      - /home/azagar/myfiles/metamodel/data/doc2vec-training.jsonl
 
   prepare-data-metamodel:
     cmd: python src/get_data.py --model metamodel
@@ -16,4 +16,4 @@ stages:
       - /home/azagar/myfiles/t5/data/asn-summary-plus-sta-lead
       - /home/azagar/myfiles/metamodel/data/surs.jsonl
     outs:
-      - /home/azagar/myfiles/data/metamodel/metamodel-training.jsonl
+      - /home/azagar/myfiles/metamodel/data/metamodel-training.jsonl
