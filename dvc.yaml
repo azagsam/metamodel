@@ -2,7 +2,7 @@ stages:
   prepare-data-d2v:
     cmd: python src/get_data.py --model d2v
     deps:
-      - /home/azagar/myfiles/kas_final/final/kas.corpus/kas.txt
+      #- /home/azagar/myfiles/kas_final/final/kas.corpus/kas.txt
       - /home/azagar/myfiles/t5/data/asn-summary-plus-sta-lead
       - /home/azagar/myfiles/metamodel/data/surs.jsonl
     outs:
@@ -11,8 +11,8 @@ stages:
   prepare-data-metamodel:
     cmd: python src/get_data.py --model metamodel
     deps:
-      - /home/azagar/myfiles/kas_final/final/kas.abstracts
-      - /home/azagar/myfiles/kas_final/final/kas.corpus/kas.txt
+      #- /home/azagar/myfiles/kas_final/final/kas.abstracts
+      #- /home/azagar/myfiles/kas_final/final/kas.corpus/kas.txt
       - /home/azagar/myfiles/t5/data/asn-summary-plus-sta-lead
       - /home/azagar/myfiles/metamodel/data/surs.jsonl
     outs:
