@@ -5,3 +5,6 @@ train-d2v:
   min_count: 1
   workers: 16
   epochs: 5
+train-metamodel:
+  validation_split: 0.2
+  seed: 42
