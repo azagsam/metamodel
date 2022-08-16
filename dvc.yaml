@@ -1,6 +1,6 @@
 stages:
   # in the both stages, kas dependencies are removed because dvc doesn't work well with a lot of small files
-  prepare-data-d2v:
+  prepare-data-d2v:  # this is a lemmatized dataset for training doc2vec model
     cmd: python src/get_data.py --model d2v
     deps:
       - /home/azagar/myfiles/t5/data/asn-summary-plus-sta-lead
@@ -8,7 +8,7 @@ stages:
     outs:
       - /home/azagar/myfiles/metamodel/data/doc2vec-training.jsonl
 
-  prepare-data-metamodel:
+  prepare-data-metamodel:  # this stage produces a dataset for summarization models
     cmd: python src/get_data.py --model metamodel
     deps:
       - /home/azagar/myfiles/t5/data/asn-summary-plus-sta-lead
@@ -16,7 +16,7 @@ stages:
     outs:
       - /home/azagar/myfiles/metamodel/data/metamodel-training.jsonl
 
-  train-d2v:
+  train-d2v:  # trains doc2vec model
     cmd: python src/train_doc2vec.py /home/azagar/myfiles/metamodel/data/doc2vec-training.jsonl /home/azagar/myfiles/metamodel/model/doc2vec-large
     deps:
       - data/doc2vec-training.jsonl
