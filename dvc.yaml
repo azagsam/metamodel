@@ -40,9 +40,9 @@ stages:
       - /home/azagar/myfiles/metamodel/src/train_metamodel.py
       - /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores-sample.jsonl
       - /home/azagar/myfiles/metamodel/model/model-large/metamodel
-      - /home/azagar/myfiles/metamodel/model/model-large/embeddings-sample.npy
     params:
       - train-metamodel.seed
       - train-metamodel.validation_split
     outs:
+      - /home/azagar/myfiles/metamodel/model/model-large/embeddings-sample.npy
       - /home/azagar/myfiles/metamodel/model/metamodel-master/model.h5
