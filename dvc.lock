@@ -65,3 +65,44 @@ stages:
     - path: model/doc2vec-large
       md5: 5bfae20d9d9ecb825f4e22dc6530b6b9
       size: 5433563
+  train-metamodel:
+    cmd: python src/train_metamodel.py /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores-sample.jsonl
+      /home/azagar/myfiles/metamodel/model/model-large/embeddings-sample.npy /home/azagar/myfiles/metamodel/model/metamodel-master/model.h5
+    deps:
+    - path: data/metamodel-training-with-scores-sample.jsonl
+      md5: ecfa1fd4729bbd34634fa1a4e2a97fc7
+      size: 15300188
+    - path: model/model-large/metamodel
+      md5: 20669f7e5c47c4ec232bd8bac0a06f02
+      size: 181210488
+    - path: src/train_metamodel.py
+      md5: 7a120144db0279272c5b4e3a0a2daac0
+      size: 1860
+    params:
+      params.yaml:
+        train-metamodel.seed: 46
+        train-metamodel.validation_split: 0.2
+    outs:
+    - path: metamodel-metrics.json
+      md5: ae31a25e7df84080e8b8cbd34961ca9b
+      size: 59
+    - path: model/metamodel-master/model.h5
+      md5: b2be03e64a5b99a0a5907fdb1996d2ca
+      size: 4076312
+  prepare-embeddings:
+    cmd: python src/prepare_embeddings.py /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores-sample.jsonl
+      /home/azagar/myfiles/metamodel/model/model-large/metamodel /home/azagar/myfiles/metamodel/model/model-large/embeddings-sample.npy
+    deps:
+    - path: data/metamodel-training-with-scores-sample.jsonl
+      md5: ecfa1fd4729bbd34634fa1a4e2a97fc7
+      size: 15300188
+    - path: model/model-large/metamodel
+      md5: 20669f7e5c47c4ec232bd8bac0a06f02
+      size: 181210488
+    - path: src/prepare_embeddings.py
+      md5: c423b0ca928152f3ebe82195aa51400c
+      size: 1594
+    outs:
+    - path: model/model-large/embeddings-sample.npy
+      md5: d1f9895f68c3090c96c2317ea9bf5e68
+      size: 512128

@@ -34,8 +34,17 @@ stages:
     outs:
       - model/doc2vec-large
 
+  prepare-embeddings:
+    cmd: python src/prepare_embeddings.py /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores-sample.jsonl /home/azagar/myfiles/metamodel/model/model-large/metamodel /home/azagar/myfiles/metamodel/model/model-large/embeddings-sample.npy
+    deps:
+      - src/prepare_embeddings.py
+      - /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores-sample.jsonl
+      - /home/azagar/myfiles/metamodel/model/model-large/metamodel
+    outs:
+      - /home/azagar/myfiles/metamodel/model/model-large/embeddings-sample.npy
+
   train-metamodel:
-    cmd: python src/train_metamodel.py /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores-sample.jsonl /home/azagar/myfiles/metamodel/model/model-large/embeddings-sample.npy /home/azagar/myfiles/metamodel/model/model-large/metamodel /home/azagar/myfiles/metamodel/model/metamodel-master/model.h5
+    cmd: python src/train_metamodel.py /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores-sample.jsonl /home/azagar/myfiles/metamodel/model/model-large/embeddings-sample.npy /home/azagar/myfiles/metamodel/model/metamodel-master/model.h5
     deps:
       - /home/azagar/myfiles/metamodel/src/train_metamodel.py
       - /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores-sample.jsonl
@@ -43,6 +52,8 @@ stages:
     params:
       - train-metamodel.seed
       - train-metamodel.validation_split
+    metrics:
+      - metamodel-metrics.json:
+          cache: false
     outs:
-      - /home/azagar/myfiles/metamodel/model/model-large/embeddings-sample.npy
       - /home/azagar/myfiles/metamodel/model/metamodel-master/model.h5
