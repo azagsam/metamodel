@@ -24,11 +24,12 @@ def train(data, embeddings, model_save_path):
     p = yaml.safe_load(open('/home/azagar/myfiles/metamodel/params.yaml'))['train-metamodel']
 
     # split data into train/val
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=p['seed'])
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=p['validation_split'], random_state=p['seed'])
 
     # build model
     model = Sequential()
     model.add(Dense(512, input_dim=X_train.shape[1], activation='relu'))
+    model.add(Dense(512, activation='relu'))
     model.add(Dense(512, activation='relu'))
     model.add(Dense(y_train.shape[1]))
     model.compile(optimizer='adam', loss='mean_squared_error')
