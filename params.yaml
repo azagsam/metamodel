@@ -6,5 +6,5 @@ train-d2v:
   workers: 16
   epochs: 5
 train-metamodel:
-  validation_split: 0.2
-  seed: 55
+  validation_split: 0.1
+  seed: 100

@@ -30,7 +30,6 @@ def train(data, embeddings, model_save_path):
     model = Sequential()
     model.add(Dense(512, input_dim=X_train.shape[1], activation='relu'))
     model.add(Dense(512, activation='relu'))
-    model.add(Dense(512, activation='relu'))
     model.add(Dense(y_train.shape[1]))
     model.compile(optimizer='adam', loss='mean_squared_error')
     model.summary()
