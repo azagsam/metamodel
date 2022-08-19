@@ -14,18 +14,18 @@ stages:
     outs:
       - data/metamodel-training.jsonl
 
-  train-d2v:  # trains doc2vec model
-    cmd: python src/train_doc2vec.py data/doc2vec-training.jsonl model/doc2vec-large
+  d2v:  # trains doc2vec model
+    cmd: python src/train_doc2vec.py data/doc2vec-training-sample.jsonl model/doc2vec-large
     deps:
-      - data/doc2vec-training.jsonl
+      - data/doc2vec-training-sample.jsonl
       - src/train_doc2vec.py  # todo in the previous two stages, the scripts should be also present in the "deps"
     params:
-      - train-d2v.max_vocab_size
-      - train-d2v.vector_size
-      - train-d2v.window
-      - train-d2v.min_count
-      - train-d2v.workers
-      - train-d2v.epochs
+      - d2v.max_vocab_size
+      - d2v.vector_size
+      - d2v.window
+      - d2v.min_count
+      - d2v.workers
+      - d2v.epochs
     metrics:
       - d2v-metrics.json:
           cache: false
@@ -51,17 +51,17 @@ stages:
       - baseline-metrics.json:
           cache: false
 
-  train-metamodel:
+  metamodel:
     cmd: python src/train_metamodel.py data/metamodel-training-with-scores.jsonl model/model-large/embeddings.npy model/metamodel-master/model.h5
     deps:
       - src/train_metamodel.py
       - data/metamodel-training-with-scores.jsonl
       - model/model-large/embeddings.npy
     params:
-      - train-metamodel.seed
-      - train-metamodel.validation_split
-      - train-metamodel.hidden_layer_size
-      - train-metamodel.patience
+      - metamodel.seed
+      - metamodel.validation_split
+      - metamodel.hidden_layer_size
+      - metamodel.patience
     metrics:
       - advanced-metrics.json:
           cache: false

@@ -30,7 +30,7 @@ def train(training_data, output_model):
     documents = [TaggedDocument(doc, [i]) for i, doc in enumerate(texts)]
 
     # train model
-    p = yaml.safe_load(open('/home/azagar/myfiles/metamodel/params.yaml'))['train-d2v']
+    p = yaml.safe_load(open('/home/azagar/myfiles/metamodel/params.yaml'))['d2v']
     print('Model training ...')
     epoch_logger = EpochLogger()
     model = Doc2Vec(documents,

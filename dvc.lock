@@ -121,3 +121,53 @@ stages:
     - path: baseline-metrics.json
       md5: df62b9b810d2cac4697eb1b1846de99c
       size: 31
+  metamodel:
+    cmd: python src/train_metamodel.py data/metamodel-training-with-scores.jsonl model/model-large/embeddings.npy
+      model/metamodel-master/model.h5
+    deps:
+    - path: data/metamodel-training-with-scores.jsonl
+      md5: b2ceeff6147ea59268dab9b69a9189b5
+      size: 302424465
+    - path: model/model-large/embeddings.npy
+      md5: 8f05310c4294891aaac37b642ad58e5b
+      size: 9216128
+    - path: src/train_metamodel.py
+      md5: 051659cecca47c01653ce3385e53dec0
+      size: 2183
+    params:
+      params.yaml:
+        metamodel.hidden_layer_size: 768
+        metamodel.patience: 2
+        metamodel.seed: 10
+        metamodel.validation_split: 0.1
+    outs:
+    - path: advanced-metrics.json
+      md5: 659610ac333bbea107df18e8c82ec383
+      size: 87
+    - path: model/metamodel-master/model.h5
+      md5: baa5938d8589388693a5e483ec5ef4b5
+      size: 8456352
+  d2v:
+    cmd: python src/train_doc2vec.py data/doc2vec-training-sample.jsonl model/doc2vec-large
+    deps:
+    - path: data/doc2vec-training-sample.jsonl
+      md5: cae6dc701c2d8e6adbfc0178585af11b
+      size: 209400
+    - path: src/train_doc2vec.py
+      md5: 3e06d898e62d3c7921e521a9d2c11557
+      size: 1712
+    params:
+      params.yaml:
+        d2v.epochs: 5
+        d2v.max_vocab_size: 100000
+        d2v.min_count: 1
+        d2v.vector_size: 256
+        d2v.window: 5
+        d2v.workers: 16
+    outs:
+    - path: d2v-metrics.json
+      md5: 395c10af666a6d926961450b5f9afb2b
+      size: 13
+    - path: model/doc2vec-large
+      md5: 67db79ed2772e1adb62c2708a5367470
+      size: 10820349

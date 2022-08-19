@@ -22,7 +22,7 @@ def train(data, embeddings, model_save_path):
     y = df.filter(regex='rouge')
 
     # params
-    p = yaml.safe_load(open('/home/azagar/myfiles/metamodel/params.yaml'))['train-metamodel']
+    p = yaml.safe_load(open('/home/azagar/myfiles/metamodel/params.yaml'))['metamodel']
 
     # split data into train/val
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=p['validation_split'], random_state=p['seed'])

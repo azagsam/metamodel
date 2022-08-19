@@ -1,12 +1,12 @@
-train-d2v:
+d2v:
   max_vocab_size: 100000
   vector_size: 256
   window: 5
   min_count: 1
   workers: 16
   epochs: 5
-train-metamodel:
+metamodel:
   validation_split: 0.1
-  seed: 100
+  seed: 10
   patience: 2
   hidden_layer_size: 768
