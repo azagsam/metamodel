@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 import yaml
+from sklearn.metrics import mean_squared_error
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.models import Sequential
 from sklearn.model_selection import train_test_split
@@ -35,7 +36,7 @@ def train(data, embeddings, model_save_path):
     model.summary()
 
     # define callback
-    callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10)
+    callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=p['patience'])
 
     # train
     history = model.fit(X_train, y_train,
@@ -48,9 +49,14 @@ def train(data, embeddings, model_save_path):
     # save or load model
     model.save(model_save_path)
 
+    # predict on test set
+    y_pred = model.predict(X_test)
+    results = {'mse_test': mean_squared_error(y_test, y_pred)}
+
     # history
     metrics = {k: v[-1] for k, v in history.history.items()}
-    with open('/home/azagar/myfiles/metamodel/metamodel-metrics.json', 'w') as outfile:
+    metrics.update(results)
+    with open('/home/azagar/myfiles/metamodel/advanced-metrics.json', 'w') as outfile:
         json.dump(metrics, outfile)
 
 

@@ -43,6 +43,16 @@ stages:
     outs:
       - /home/azagar/myfiles/metamodel/model/model-large/embeddings.npy
 
+  random-baseline:
+    cmd: python src/random_baseline.py /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores.jsonl /home/azagar/myfiles/metamodel/model/model-large/embeddings.npy
+    deps:
+      - src/random_baseline.py
+      - /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores.jsonl
+      - /home/azagar/myfiles/metamodel/model/model-large/embeddings.npy
+    metrics:
+      - baseline-metrics.json:
+          cache: false
+
   train-metamodel:
     cmd: python src/train_metamodel.py /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores.jsonl /home/azagar/myfiles/metamodel/model/model-large/embeddings.npy /home/azagar/myfiles/metamodel/model/metamodel-master/model.h5
     deps:
@@ -53,7 +63,7 @@ stages:
       - train-metamodel.seed
       - train-metamodel.validation_split
     metrics:
-      - metamodel-metrics.json:
+      - advanced-metrics.json:
           cache: false
     outs:
       - /home/azagar/myfiles/metamodel/model/metamodel-master/model.h5

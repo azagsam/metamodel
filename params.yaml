@@ -8,3 +8,4 @@ train-d2v:
 train-metamodel:
   validation_split: 0.1
   seed: 100
+  patience: 2
