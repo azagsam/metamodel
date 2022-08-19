@@ -1,23 +1,21 @@
 stages:
-  # in the both stages, kas dependencies are removed because dvc doesn't work well with a lot of small files
+  # in the both stages, external dataset dependencies are removed because dvc doesn't work well with a lot of small files
   prepare-data-d2v:  # this is a lemmatized dataset for training doc2vec model
     cmd: python src/get_data.py --model d2v
     deps:
-      - /home/azagar/myfiles/t5/data/asn-summary-plus-sta-lead
       - data/surs.jsonl
     outs:
-      - /home/azagar/myfiles/metamodel/data/doc2vec-training.jsonl
+      - data/doc2vec-training.jsonl
 
   prepare-data-metamodel:  # this stage produces a dataset for summarization models
     cmd: python src/get_data.py --model metamodel
     deps:
-      - /home/azagar/myfiles/t5/data/asn-summary-plus-sta-lead
       - data/surs.jsonl
     outs:
-      - /home/azagar/myfiles/metamodel/data/metamodel-training.jsonl
+      - data/metamodel-training.jsonl
 
   train-d2v:  # trains doc2vec model
-    cmd: python src/train_doc2vec.py /home/azagar/myfiles/metamodel/data/doc2vec-training.jsonl /home/azagar/myfiles/metamodel/model/doc2vec-large
+    cmd: python src/train_doc2vec.py data/doc2vec-training.jsonl model/doc2vec-large
     deps:
       - data/doc2vec-training.jsonl
       - src/train_doc2vec.py  # todo in the previous two stages, the scripts should be also present in the "deps"
@@ -35,30 +33,30 @@ stages:
       - model/doc2vec-large
 
   prepare-embeddings:
-    cmd: python src/prepare_embeddings.py /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores.jsonl /home/azagar/myfiles/metamodel/model/model-large/metamodel /home/azagar/myfiles/metamodel/model/model-large/embeddings.npy
+    cmd: python src/prepare_embeddings.py data/metamodel-training-with-scores.jsonl model/model-large/metamodel model/model-large/embeddings.npy
     deps:
       - src/prepare_embeddings.py
-      - /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores.jsonl
-      - /home/azagar/myfiles/metamodel/model/model-large/metamodel
+      - data/metamodel-training-with-scores.jsonl
+      - model/model-large/metamodel
     outs:
-      - /home/azagar/myfiles/metamodel/model/model-large/embeddings.npy
+      - model/model-large/embeddings.npy
 
   random-baseline:
-    cmd: python src/random_baseline.py /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores.jsonl /home/azagar/myfiles/metamodel/model/model-large/embeddings.npy
+    cmd: python src/random_baseline.py data/metamodel-training-with-scores.jsonl model/model-large/embeddings.npy
     deps:
       - src/random_baseline.py
-      - /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores.jsonl
-      - /home/azagar/myfiles/metamodel/model/model-large/embeddings.npy
+      - data/metamodel-training-with-scores.jsonl
+      - model/model-large/embeddings.npy
     metrics:
       - baseline-metrics.json:
           cache: false
 
   train-metamodel:
-    cmd: python src/train_metamodel.py /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores.jsonl /home/azagar/myfiles/metamodel/model/model-large/embeddings.npy /home/azagar/myfiles/metamodel/model/metamodel-master/model.h5
+    cmd: python src/train_metamodel.py data/metamodel-training-with-scores.jsonl model/model-large/embeddings.npy model/metamodel-master/model.h5
     deps:
-      - /home/azagar/myfiles/metamodel/src/train_metamodel.py
-      - /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores.jsonl
-      - /home/azagar/myfiles/metamodel/model/model-large/embeddings.npy
+      - src/train_metamodel.py
+      - data/metamodel-training-with-scores.jsonl
+      - model/model-large/embeddings.npy
     params:
       - train-metamodel.seed
       - train-metamodel.validation_split
@@ -66,4 +64,4 @@ stages:
       - advanced-metrics.json:
           cache: false
     outs:
-      - /home/azagar/myfiles/metamodel/model/metamodel-master/model.h5
+      - model/metamodel-master/model.h5

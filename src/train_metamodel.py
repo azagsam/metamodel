@@ -35,6 +35,7 @@ def train(data, embeddings, model_save_path):
     model.compile(optimizer='adam', loss='mean_squared_error')
     model.summary()
 
+    print(p['hidden_layer_size'])
     # define callback
     callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=p['patience'])
 
