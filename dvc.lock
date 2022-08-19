@@ -80,14 +80,14 @@ stages:
       size: 2116
     params:
       params.yaml:
-        train-metamodel.seed: 100
+        train-metamodel.seed: 10
         train-metamodel.validation_split: 0.1
     outs:
     - path: advanced-metrics.json
-      md5: 1c29129cee9d73b738b7fb86ebb27f92
-      size: 89
+      md5: 53bc3a53d1aee50b4ded85c2a01a350c
+      size: 88
     - path: model/metamodel-master/model.h5
-      md5: 0f55f83b67fb8a3b28d33b89a3faa885
+      md5: 2d1e828f7f66a0918862a5a21f8a898e
       size: 4075680
   prepare-embeddings:
     cmd: python src/prepare_embeddings.py /home/azagar/myfiles/metamodel/data/metamodel-training-with-scores.jsonl

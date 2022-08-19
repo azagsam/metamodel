@@ -7,5 +7,5 @@ train-d2v:
   epochs: 5
 train-metamodel:
   validation_split: 0.1
-  seed: 100
+  seed: 10
   patience: 2
