@@ -60,6 +60,8 @@ stages:
     params:
       - train-metamodel.seed
       - train-metamodel.validation_split
+      - train-metamodel.hidden_layer_size
+      - train-metamodel.patience
     metrics:
       - advanced-metrics.json:
           cache: false
