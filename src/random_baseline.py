@@ -22,7 +22,7 @@ def mean_predict(data, embeddings):
     y = df.filter(regex='rouge')
 
     # params
-    p = yaml.safe_load(open('/home/azagar/myfiles/metamodel/params.yaml'))['metamodel']
+    p = yaml.safe_load(open('params.yaml'))['metamodel']
 
     # split data into train/val
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=p['validation_split'], random_state=p['seed'])
@@ -31,7 +31,7 @@ def mean_predict(data, embeddings):
     y_pred = pd.concat([y_train.mean(axis=0).to_frame().T]*len(y_test)).reset_index(drop=True)
     results = {'mse_test': mean_squared_error(y_test, y_pred)}
 
-    with open('/home/azagar/myfiles/metamodel/baseline-metrics.json', 'w') as outfile:
+    with open('baseline-metrics.json', 'w') as outfile:
         json.dump(results, outfile)
 
 if __name__ == '__main__':

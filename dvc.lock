@@ -115,12 +115,12 @@ stages:
       md5: 8f05310c4294891aaac37b642ad58e5b
       size: 9216128
     - path: src/random_baseline.py
-      md5: 6bedd9c189fc75189bff648fe8bcf1bf
-      size: 1274
+      md5: 1b12a60aef6da13a7d379feb6cdaa36f
+      size: 1206
     outs:
     - path: baseline-metrics.json
-      md5: df62b9b810d2cac4697eb1b1846de99c
-      size: 31
+      md5: d155fdde91fadee0742d81a6121f5920
+      size: 30
   metamodel:
     cmd: python src/train_metamodel.py data/metamodel-training-with-scores.jsonl model/model-large/embeddings.npy
       model/metamodel-master/model.h5
@@ -132,27 +132,27 @@ stages:
       md5: 8f05310c4294891aaac37b642ad58e5b
       size: 9216128
     - path: src/train_metamodel.py
-      md5: 051659cecca47c01653ce3385e53dec0
-      size: 2183
+      md5: 7c7b272c2d147b851051ce1aa7fdf249
+      size: 2121
     params:
       params.yaml:
-        metamodel.hidden_layer_size: 768
+        metamodel.hidden_layer_size: 1024
         metamodel.patience: 2
         metamodel.seed: 10
         metamodel.validation_split: 0.1
     outs:
     - path: advanced-metrics.json
-      md5: 659610ac333bbea107df18e8c82ec383
-      size: 87
+      md5: 23a2dbadf42b23977ee5db859fefb1b5
+      size: 89
     - path: model/metamodel-master/model.h5
-      md5: baa5938d8589388693a5e483ec5ef4b5
-      size: 8456352
+      md5: e468eb6b51610f169ea7cdbf8d08bd0e
+      size: 14409888
   d2v:
-    cmd: python src/train_doc2vec.py data/doc2vec-training-sample.jsonl model/doc2vec-large
+    cmd: python src/train_doc2vec.py data/doc2vec-training.jsonl model/doc2vec-large
     deps:
-    - path: data/doc2vec-training-sample.jsonl
-      md5: cae6dc701c2d8e6adbfc0178585af11b
-      size: 209400
+    - path: data/doc2vec-training.jsonl
+      md5: 6f23f068915b24923ad6051f58e987fb
+      size: 7956779558
     - path: src/train_doc2vec.py
       md5: 3e06d898e62d3c7921e521a9d2c11557
       size: 1712
@@ -169,5 +169,5 @@ stages:
       md5: 395c10af666a6d926961450b5f9afb2b
       size: 13
     - path: model/doc2vec-large
-      md5: 67db79ed2772e1adb62c2708a5367470
-      size: 10820349
+      md5: a1586141532c1039ec66d3b72c06b4f6
+      size: 5433532

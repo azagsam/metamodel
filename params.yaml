@@ -9,4 +9,4 @@ metamodel:
   validation_split: 0.1
   seed: 10
   patience: 2
-  hidden_layer_size: 768
+  hidden_layer_size: 1024
