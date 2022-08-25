@@ -30,7 +30,7 @@ def train(training_data, output_model):
     documents = [TaggedDocument(doc, [i]) for i, doc in enumerate(texts)]
 
     # train model
-    p = yaml.safe_load(open('/home/azagar/myfiles/metamodel/params.yaml'))['d2v']
+    p = yaml.safe_load(open('params.yaml'))['d2v']
     print('Model training ...')
     epoch_logger = EpochLogger()
     model = Doc2Vec(documents,
@@ -44,10 +44,6 @@ def train(training_data, output_model):
                     compute_loss=True
                     )
 
-    # save metrics
-    with open('d2v-metrics.json', 'w') as out:
-        json.dump({'loss': model.get_latest_training_loss()}, out)
-
     # save model
     model.save(output_model)
 
@@ -55,4 +51,5 @@ def train(training_data, output_model):
 if __name__ == '__main__':
     training_data = sys.argv[1]
     output_model = sys.argv[2]
+    os.makedirs("/".join(output_model.split('/')[:2]), exist_ok=True)
     train(training_data, output_model)

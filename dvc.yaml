@@ -17,8 +17,9 @@ stages:
     - data/metamodel-training.jsonl
 
     frozen: true
+
   d2v:  # trains doc2vec model
-    cmd: python src/train_doc2vec.py data/doc2vec-training.jsonl model/doc2vec-large
+    cmd: python src/train_doc2vec.py data/doc2vec-training.jsonl model/doc2vec/model
     deps:
     - data/doc2vec-training.jsonl
     - src/train_doc2vec.py
@@ -29,40 +30,35 @@ stages:
     - d2v.vector_size
     - d2v.window
     - d2v.workers
-    metrics:
-    - d2v-metrics.json:
-        cache: false
     outs:
-    - model/doc2vec-large
+    - model/doc2vec/model
 
-    frozen: true
   prepare-embeddings:
     cmd: python src/prepare_embeddings.py data/metamodel-training-with-scores.jsonl
-      model/model-large/metamodel model/model-large/embeddings.npy
+      model/doc2vec/model model/doc2vec/embeddings.npy
     deps:
     - src/prepare_embeddings.py
     - data/metamodel-training-with-scores.jsonl
-    - model/model-large/metamodel
+    - model/doc2vec/model
     outs:
-    - model/model-large/embeddings.npy
+    - model/doc2vec/embeddings.npy
 
   random-baseline:
-    cmd: python src/random_baseline.py data/metamodel-training-with-scores.jsonl model/model-large/embeddings.npy
+    cmd: python src/random_baseline.py data/metamodel-training-with-scores.jsonl model/doc2vec/embeddings.npy
     deps:
     - src/random_baseline.py
     - data/metamodel-training-with-scores.jsonl
-    - model/model-large/embeddings.npy
+    - model/doc2vec/embeddings.npy
     metrics:
     - baseline-metrics.json:
         cache: false
 
   metamodel:
-    cmd: python src/train_metamodel.py data/metamodel-training-with-scores.jsonl model/model-large/embeddings.npy
-      model/metamodel-master/model.h5
+    cmd: python src/train_metamodel.py data/metamodel-training-with-scores.jsonl model/doc2vec/embeddings.npy model/metamodel/model.h5
     deps:
     - src/train_metamodel.py
     - data/metamodel-training-with-scores.jsonl
-    - model/model-large/embeddings.npy
+    - model/doc2vec/embeddings.npy
     params:
     - metamodel.seed
     - metamodel.validation_split
@@ -72,4 +68,4 @@ stages:
     - advanced-metrics.json:
         cache: false
     outs:
-    - model/metamodel-master/model.h5
+    - model/metamodel/model.h5
