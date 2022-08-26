@@ -10,6 +10,8 @@ from sklearn.metrics import mean_squared_error
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.models import Sequential
 from sklearn.model_selection import train_test_split
+from tqdm import tqdm
+from sklearn.preprocessing import MinMaxScaler
 
 
 def train(data, embeddings, model_save_path):
@@ -21,6 +23,19 @@ def train(data, embeddings, model_save_path):
 
     X = np.array(doc_vectors)
     y = df.filter(regex='rouge')
+
+    # add length info
+    print('Adding length info ...')
+    lengths = np.array([len(t) for t in df['text']]).reshape(-1, 1)
+    scaler = MinMaxScaler((-1, 1))
+    scaler.fit(lengths)
+    scaled = scaler.transform(lengths)
+
+    X_length = []
+    for vec, num in zip(X, scaled):
+        vec = np.append(vec, np.float32(num))
+        X_length.append(vec)
+    X = np.array(X_length)
 
     # params
     p = yaml.safe_load(open('params.yaml'))['metamodel']

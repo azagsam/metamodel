@@ -128,26 +128,26 @@ stages:
     deps:
     - path: data/metamodel-training-with-scores-large.jsonl
       md5: bc643a7be91ecdbab65554e8218ebf22
-      size: 1534230681
+      size: 1534324100
     - path: model/doc2vec/embeddings-large.npy
       md5: 3cc7596e17f5aaecd4431be37fc463cb
       size: 95661184
     - path: src/train_metamodel.py
-      md5: dde6776098b58dd4b8acb869a24d0a42
-      size: 2202
+      md5: 555a8f89ee7e657dd3696c7c2ce5814a
+      size: 2714
     params:
       params.yaml:
         metamodel.hidden_layer_size: 1024
         metamodel.patience: 2
         metamodel.seed: 10
-        metamodel.validation_split: 0.1
+        metamodel.validation_split: 0.2
     outs:
     - path: advanced-metrics.json
-      md5: b3e07445e90364bb5e133a359d836237
+      md5: e588c7cdb4795fa79ba8b89de4ce2628
       size: 89
     - path: model/metamodel/model.h5
-      md5: 0f3e6f7240456e69944b72ecdcfb86d8
-      size: 15982752
+      md5: c0587a8ffea04822d8f29f5c64e73377
+      size: 15995040
   d2v:
     cmd: python src/train_doc2vec.py data/doc2vec-training.jsonl model/doc2vec/model
     deps:

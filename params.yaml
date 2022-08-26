@@ -6,7 +6,7 @@ d2v:
   workers: 16
   epochs: 5
 metamodel:
-  validation_split: 0.1
+  validation_split: 0.2
   seed: 10
   patience: 2
   hidden_layer_size: 1024
