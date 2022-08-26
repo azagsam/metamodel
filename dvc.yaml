@@ -34,31 +34,31 @@ stages:
     - model/doc2vec/model
 
   prepare-embeddings:
-    cmd: python src/prepare_embeddings.py data/metamodel-training-with-scores.jsonl
-      model/doc2vec/model model/doc2vec/embeddings.npy
+    cmd: python src/prepare_embeddings.py data/metamodel-training-with-scores-large.jsonl
+      model/doc2vec/model model/doc2vec/embeddings-large.npy
     deps:
     - src/prepare_embeddings.py
-    - data/metamodel-training-with-scores.jsonl
+    - data/metamodel-training-with-scores-large.jsonl
     - model/doc2vec/model
     outs:
-    - model/doc2vec/embeddings.npy
+    - model/doc2vec/embeddings-large.npy
 
   random-baseline:
-    cmd: python src/random_baseline.py data/metamodel-training-with-scores.jsonl model/doc2vec/embeddings.npy
+    cmd: python src/random_baseline.py data/metamodel-training-with-scores-large.jsonl model/doc2vec/embeddings-large.npy
     deps:
     - src/random_baseline.py
-    - data/metamodel-training-with-scores.jsonl
-    - model/doc2vec/embeddings.npy
+    - data/metamodel-training-with-scores-large.jsonl
+    - model/doc2vec/embeddings-large.npy
     metrics:
     - baseline-metrics.json:
         cache: false
 
   metamodel:
-    cmd: python src/train_metamodel.py data/metamodel-training-with-scores.jsonl model/doc2vec/embeddings.npy model/metamodel/model.h5
+    cmd: python src/train_metamodel.py data/metamodel-training-with-scores-large.jsonl model/doc2vec/embeddings-large.npy model/metamodel/model.h5
     deps:
     - src/train_metamodel.py
-    - data/metamodel-training-with-scores.jsonl
-    - model/doc2vec/embeddings.npy
+    - data/metamodel-training-with-scores-large.jsonl
+    - model/doc2vec/embeddings-large.npy
     params:
     - metamodel.seed
     - metamodel.validation_split
