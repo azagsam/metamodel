@@ -45,7 +45,7 @@ def train(data, embeddings, model_save_path):
                         batch_size=8,
                         epochs=100,
                         verbose=1,
-                        validation_split=.2,
+                        validation_split=p['validation_split'],
                         callbacks=[callback])
 
     # save or load model

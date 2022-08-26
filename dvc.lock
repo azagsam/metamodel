@@ -133,8 +133,8 @@ stages:
       md5: 3cc7596e17f5aaecd4431be37fc463cb
       size: 95661184
     - path: src/train_metamodel.py
-      md5: e147117e0ecc3bece73017a2c64393ad
-      size: 2183
+      md5: dde6776098b58dd4b8acb869a24d0a42
+      size: 2202
     params:
       params.yaml:
         metamodel.hidden_layer_size: 1024
@@ -143,10 +143,10 @@ stages:
         metamodel.validation_split: 0.1
     outs:
     - path: advanced-metrics.json
-      md5: 26b0015e7abaa1c29952086b4b8d6eb3
+      md5: b3e07445e90364bb5e133a359d836237
       size: 89
     - path: model/metamodel/model.h5
-      md5: ae34dda3c5666799400d440f2926ea79
+      md5: 0f3e6f7240456e69944b72ecdcfb86d8
       size: 15982752
   d2v:
     cmd: python src/train_doc2vec.py data/doc2vec-training.jsonl model/doc2vec/model
