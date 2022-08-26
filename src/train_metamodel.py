@@ -66,6 +66,7 @@ if __name__ == '__main__':
     data = sys.argv[1]
     embeddings = sys.argv[2]
     model_save_path = sys.argv[3]
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
     os.makedirs('model/metamodel', exist_ok=True)
 
     train(data, embeddings, model_save_path)
