@@ -15,11 +15,11 @@ from sklearn.model_selection import train_test_split
 def train(data, embeddings, model_save_path):
     # get and prepare data
     print('Retrieving data ... ')
-    train = pd.read_json(os.path.join(data, 'train.jsonl'), lines=True)
+    train = pd.read_json(os.path.join(data, 'train-balanced.jsonl'), lines=True)
     val = pd.read_json(os.path.join(data, 'val.jsonl'), lines=True)
     test = pd.read_json(os.path.join(data, 'test.jsonl'), lines=True)
 
-    train_vectors = np.load(os.path.join(embeddings, 'embeddings-train.npy'))
+    train_vectors = np.load(os.path.join(embeddings, 'embeddings-train-balanced.npy'))
     val_vectors = np.load(os.path.join(embeddings, 'embeddings-val.npy'))
     test_vectors = np.load(os.path.join(embeddings, 'embeddings-test.npy'))
     print('Retrieved.')
