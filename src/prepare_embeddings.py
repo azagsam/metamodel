@@ -1,3 +1,4 @@
+import os
 import string
 import sys
 
@@ -21,23 +22,28 @@ def prepare_embeddings(data, stopwords, d2v_model, save_path):
         content_filtered = content_filtered.translate(str.maketrans('', '', string.punctuation))
         return content_filtered
 
-    # get and prepare data
-    print('Retrieving data ... ')
-    df = pd.read_json(data, lines=True)
-    print('Retrieved.')
-
     # load doc2vec model & load external tools
     lem_sl = Lemmatizer('sl')
     stopwords = set(stopwords.words('slovene'))
     model = Doc2Vec.load(d2v_model)
-    doc_vectors = []
-    for text in tqdm(df['text']):
-        doc_vec = model.infer_vector(filter_text(text).split())
-        doc_vectors.append(doc_vec)
-    doc_vectors = np.array(doc_vectors)
 
-    # save
-    np.save(save_path, doc_vectors)  # .npy extension is added if not given
+    # get and prepare data
+    for file in os.listdir(data):
+        source = os.path.join(data, file)
+        print('Retrieving data ... ')
+        df = pd.read_json(source, lines=True)
+        print('Retrieved.')
+
+        # calculate embeddings
+        doc_vectors = []
+        for text in tqdm(df['text']):
+            doc_vec = model.infer_vector(filter_text(text).split())
+            doc_vectors.append(doc_vec)
+        doc_vectors = np.array(doc_vectors)
+
+        # save
+        target = os.path.join(save_path, f'embeddings-{file.split(".")[0]}.npy')
+        np.save(target, doc_vectors)  # .npy extension is added if not given
 
 
 if __name__ == '__main__':
