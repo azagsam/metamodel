@@ -28,6 +28,7 @@ def prepare_embeddings(data, stopwords, d2v_model, save_path):
     model = Doc2Vec.load(d2v_model)
 
     # get and prepare data
+    os.makedirs(save_path)
     for file in os.listdir(data):
         source = os.path.join(data, file)
         print('Retrieving data ... ')
