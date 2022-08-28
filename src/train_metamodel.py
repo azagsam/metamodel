@@ -17,12 +17,22 @@ from sklearn.preprocessing import MinMaxScaler
 def train(data, embeddings, model_save_path):
     # get and prepare data
     print('Retrieving data ... ')
-    df = pd.read_json(data, lines=True)
-    doc_vectors = np.load(embeddings)
+    train = pd.read_json(os.path.join(data, 'train.jsonl'), lines=True)
+    val = pd.read_json(os.path.join(data, 'val.jsonl'), lines=True)
+    test = pd.read_json(os.path.join(data, 'test.jsonl'), lines=True)
+
+    train_vectors = np.load(os.path.join(embeddings, 'embeddings-train.npy'))
+    val_vectors = np.load(os.path.join(embeddings, 'embeddings-val.npy'))
+    test_vectors = np.load(os.path.join(embeddings, 'embeddings-test.npy'))
     print('Retrieved.')
 
-    X = np.array(doc_vectors)
-    y = df.filter(regex='rouge')
+    X_train = np.array(train_vectors)
+    X_val = np.array(val_vectors)
+    X_test = np.array(test_vectors)
+
+    y_train = np.array(train.filter(regex='rouge'))
+    y_val = np.array(val.filter(regex='rouge'))
+    y_test = np.array(test.filter(regex='rouge'))
 
     # add length info
     print('Adding length info ...')
@@ -39,9 +49,6 @@ def train(data, embeddings, model_save_path):
 
     # params
     p = yaml.safe_load(open('params.yaml'))['metamodel']
-
-    # split data into train/val
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=p['validation_split'], random_state=p['seed'])
 
     # build model
     model = Sequential()
@@ -60,7 +67,7 @@ def train(data, embeddings, model_save_path):
                         batch_size=8,
                         epochs=100,
                         verbose=1,
-                        validation_split=p['validation_split'],
+                        validation_data=(X_val, y_val),
                         callbacks=[callback])
 
     # save or load model
