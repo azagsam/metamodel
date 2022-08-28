@@ -34,18 +34,38 @@ def train(data, embeddings, model_save_path):
     y_val = np.array(val.filter(regex='rouge'))
     y_test = np.array(test.filter(regex='rouge'))
 
-    # add length info
-    print('Adding length info ...')
-    lengths = np.array([len(t) for t in df['text']]).reshape(-1, 1)
-    scaler = MinMaxScaler((-1, 1))
+    # add length info to train, val and test
+    print('Adding length info to test ...')
+    lengths = np.array([len(t) for t in train['text']]).reshape(-1, 1)  # train
+    scaler = MinMaxScaler((-1, 1))  # scale only once !
     scaler.fit(lengths)
     scaled = scaler.transform(lengths)
 
     X_length = []
-    for vec, num in zip(X, scaled):
+    for vec, num in zip(X_train, scaled):
         vec = np.append(vec, np.float32(num))
         X_length.append(vec)
-    X = np.array(X_length)
+    X_train = np.array(X_length)
+
+    print('Adding length info to val ...')
+    lengths = np.array([len(t) for t in val['text']]).reshape(-1, 1)  # val
+    scaled = scaler.transform(lengths)  # no scaler training
+
+    X_length = []
+    for vec, num in zip(X_val, scaled):
+        vec = np.append(vec, np.float32(num))
+        X_length.append(vec)
+    X_val = np.array(X_length)
+
+    print('Adding length info to test ...')
+    lengths = np.array([len(t) for t in test['text']]).reshape(-1, 1)  # val
+    scaled = scaler.transform(lengths)  # no scaler training
+
+    X_length = []
+    for vec, num in zip(X_test, scaled):
+        vec = np.append(vec, np.float32(num))
+        X_length.append(vec)
+    X_test = np.array(X_length)
 
     # params
     p = yaml.safe_load(open('params.yaml'))['metamodel']

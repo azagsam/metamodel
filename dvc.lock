@@ -1,1 +1,110 @@
-merge was done
+schema: '2.0'
+stages:
+  random-baseline:
+    cmd: python src/random_baseline.py data/final/train.jsonl data/final/test.jsonl
+    deps:
+    - path: data/final/test.jsonl
+      md5: d7cc644ae061295194f180a075ee9e86
+      size: 71993789
+    - path: data/final/train.jsonl
+      md5: 062198cc3ab761a754444992bf2e6056
+      size: 1387795638
+    - path: src/random_baseline.py
+      md5: e5bbd5b816ce697f4038c9164b510c9b
+      size: 847
+    outs:
+    - path: baseline-metrics.json
+      md5: 0ca0cbb45e90fc57ce791c0f8d485491
+      size: 31
+  prepare-data-d2v:
+    cmd: python src/get_data.py --model d2v
+    deps:
+    - path: data/surs.jsonl
+      md5: 8a2b6edaffd6ff94fde2eed5dd917ca8
+      size: 8947469
+    - path: src/get_data.py
+      md5: 70f5e88dcd69499815a82a36d29b076c
+      size: 4841
+    outs:
+    - path: data/doc2vec-training.jsonl
+      md5: 6f23f068915b24923ad6051f58e987fb
+      size: 7956779558
+  d2v:
+    cmd: python src/train_doc2vec.py data/doc2vec-training.jsonl model/doc2vec/model
+    deps:
+    - path: data/doc2vec-training.jsonl
+      md5: 6f23f068915b24923ad6051f58e987fb
+      size: 7956779558
+    - path: src/train_doc2vec.py
+      md5: 069f0d64dda2842a293414ecfecbe4da
+      size: 1614
+    params:
+      params.yaml:
+        d2v.epochs: 5
+        d2v.max_vocab_size: 100000
+        d2v.min_count: 1
+        d2v.vector_size: 256
+        d2v.window: 5
+        d2v.workers: 16
+    outs:
+    - path: model/doc2vec/model
+      md5: 34afba3ae0923d1408298d9d29972266
+      size: 5433533
+  prepare-embeddings:
+    cmd: python src/prepare_embeddings.py data/final model/doc2vec/model model/doc2vec/final
+    deps:
+    - path: data/final
+      md5: 652afbd048dd642738d800d7a05adf10.dir
+      size: 2546864828
+      nfiles: 4
+    - path: model/doc2vec/model
+      md5: 34afba3ae0923d1408298d9d29972266
+      size: 5433533
+    - path: src/prepare_embeddings.py
+      md5: 2025963650b0e7477e8b6e92b0a8133d
+      size: 1866
+    outs:
+    - path: model/doc2vec/final
+      md5: 9848e2d286152bbdd7a0b9f3c34ad07d.dir
+      size: 112999936
+      nfiles: 4
+  prepare-data-metamodel:
+    cmd: python src/get_data.py --model metamodel
+    deps:
+    - path: data/surs.jsonl
+      md5: 8a2b6edaffd6ff94fde2eed5dd917ca8
+      size: 8947469
+    - path: src/get_data.py
+      md5: 70f5e88dcd69499815a82a36d29b076c
+      size: 4841
+    outs:
+    - path: data/metamodel-training.jsonl
+      md5: c2d0652ad342627e95f23768d1bc942a
+      size: 8857204468
+  metamodel:
+    cmd: python src/train_metamodel.py data/final model/doc2vec/final model/metamodel/model.h5
+    deps:
+    - path: data/final
+      md5: 652afbd048dd642738d800d7a05adf10.dir
+      size: 2546864828
+      nfiles: 4
+    - path: model/doc2vec/final
+      md5: 9848e2d286152bbdd7a0b9f3c34ad07d.dir
+      size: 112999936
+      nfiles: 4
+    - path: src/train_metamodel.py
+      md5: 54f12775496264a5be7af0358bacc3cb
+      size: 3910
+    params:
+      params.yaml:
+        metamodel.hidden_layer_size: 1024
+        metamodel.patience: 2
+        metamodel.seed: 10
+        metamodel.validation_split: 0.2
+    outs:
+    - path: advanced-metrics.json
+      md5: 1fee06c9ee97410a2bcd9a47ac1fd0ef
+      size: 89
+    - path: model/metamodel/model.h5
+      md5: 7dc4904ff13e43aa60984cde2412e152
+      size: 15995040
