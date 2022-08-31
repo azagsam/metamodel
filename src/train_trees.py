@@ -47,7 +47,10 @@ def train(data, embeddings):
 
     # predict on test set
     y_pred = tree_regressor.predict(X_test)
-    results = {'tree_mse_test': mean_squared_error(y_test, y_pred)}
+    results = {'mse_test': mean_squared_error(y_test, y_pred)}
+
+    with open('tree-metrics.json', 'w') as outfile:
+        json.dump(results, outfile)
 
     # build random forest model
     print('Training forest regressor ...')
@@ -60,11 +63,11 @@ def train(data, embeddings):
 
     # predict on test set
     y_pred = forest_regressor.predict(X_test)
-    results.update({'forest_mse_test': mean_squared_error(y_test, y_pred)})
+    results = {'mse_test': mean_squared_error(y_test, y_pred)}
 
     print(results)
 
-    with open('trees-metrics.json', 'w') as outfile:
+    with open('forest-metrics.json', 'w') as outfile:
         json.dump(results, outfile)
 
 

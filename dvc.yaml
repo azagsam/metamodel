@@ -76,5 +76,7 @@ stages:
       - data/final
       - model/doc2vec/final
     metrics:
-      - trees-metrics.json:
+      - tree-metrics.json:
+          cache: false
+      - forest-metrics.json:
           cache: false
