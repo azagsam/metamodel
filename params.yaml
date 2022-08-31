@@ -10,3 +10,9 @@ metamodel:
   seed: 10
   patience: 2
   hidden_layer_size: 1024
+tree:
+  min_samples_split: 100
+  min_samples_leaf: 100
+forest:
+  min_samples_split: 100
+  min_samples_leaf: 100

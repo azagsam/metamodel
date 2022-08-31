@@ -68,3 +68,13 @@ stages:
         cache: false
     outs:
     - model/metamodel/model.h5
+
+  trees:
+    cmd: python src/train_trees.py data/final model/doc2vec/final
+    deps:
+      - src/train_trees.py
+      - data/final
+      - model/doc2vec/final
+    metrics:
+      - trees-metrics.json:
+          cache: false
