@@ -182,11 +182,18 @@ stages:
       size: 112999936
       nfiles: 4
     - path: src/train_trees.py
-      md5: 44f5619c687347c11f05330162cf73e9
-      size: 2883
+      md5: bd946989a4472a972cb994bf91dcc9aa
+      size: 2966
+    params:
+      params.yaml:
+        forest.min_samples_leaf: 100
+        forest.min_samples_split: 100
+        forest.n_estimators: 300
+        tree.min_samples_leaf: 100
+        tree.min_samples_split: 100
     outs:
     - path: forest-metrics.json
-      md5: afa9443dc3117222b1cc349ae6dbfa68
+      md5: c1d3f8757af8075332321d458408d7dc
       size: 31
     - path: tree-metrics.json
       md5: 02e40becbfabbcca3fa7e0bca8cbfb39

@@ -14,5 +14,6 @@ tree:
   min_samples_split: 100
   min_samples_leaf: 100
 forest:
+  n_estimators: 300
   min_samples_split: 100
   min_samples_leaf: 100

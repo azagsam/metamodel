@@ -56,6 +56,7 @@ def train(data, embeddings):
     print('Training forest regressor ...')
     forest_regressor = RandomForestRegressor(n_jobs=16,
                                              verbose=1,
+                                             n_estimators=forest['n_estimators'],
                                              min_samples_split=forest['min_samples_split'],
                                              min_samples_leaf=forest['min_samples_leaf']
                                              )

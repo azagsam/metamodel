@@ -75,6 +75,12 @@ stages:
       - src/train_trees.py
       - data/final
       - model/doc2vec/final
+    params:
+      - tree.min_samples_split
+      - tree.min_samples_leaf
+      - forest.n_estimators
+      - forest.min_samples_split
+      - forest.min_samples_leaf
     metrics:
       - tree-metrics.json:
           cache: false
