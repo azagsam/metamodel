@@ -52,4 +52,6 @@ if __name__ == '__main__':
     training_data = sys.argv[1]
     output_model = sys.argv[2]
     os.makedirs("/".join(output_model.split('/')[:2]), exist_ok=True)
+    if len(output_model.split('/')) < 3:  # path needs to be at least three levels deep
+        raise ValueError("Path is too short. Program terminated.")
     train(training_data, output_model)
