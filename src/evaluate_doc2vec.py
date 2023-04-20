@@ -10,7 +10,7 @@ df = pd.read_json('/home/azagar/myfiles/metamodel/data/doc2vec-training.jsonl', 
 print('Retrieved.')
 
 # load model
-fname = "/home/azagar/myfiles/metamodel/model/model-large/metamodel"
+fname = "/home/azagar/myfiles/metamodel/model/doc2vec/model"
 model = Doc2Vec.load(fname)
 
 vectors = np.array([model.infer_vector(df['text'][n].split()) for n in tqdm(list(range(50000)))])
