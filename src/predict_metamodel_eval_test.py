@@ -58,7 +58,14 @@ def get_best_model(row):
     return max(scores, key=scores.get)
 
 
-
+def get_model_averages(row):
+    models = ['t5-article', 'hybrid-long', 'sumbasic', 'graph-based']
+    scores = {}
+    for model in models:
+        col = f'{model}-score'
+        score = np.array(list(row[col].values())).mean()
+        scores[model] = score
+    return scores
 
 
 if __name__ == '__main__':
@@ -73,9 +80,11 @@ if __name__ == '__main__':
 
     # import data
     df = pd.read_json('data/final/test.jsonl', lines=True)
+    print(len(df))
 
     recommended = []
     best_model = []
+    model_averages = []
     for idx, row in tqdm(df.iterrows()):
         text = row['text']
         d2v_recommendation = get_recommended_model(d2v_model, metamodel, text)
@@ -83,6 +92,25 @@ if __name__ == '__main__':
 
         best = get_best_model(row)
         best_model.append(best)
+
+        models_avg = get_model_averages(row)
+        model_averages.append(models_avg)
+
+
+    metamodel_score = []
+    for idx, rec in enumerate(recommended):
+        row_score = df.iloc[idx][rec+'-score']
+        metamodel_score.append(row_score)
+    metamodel_score_df = pd.DataFrame(metamodel_score)
+
+    df = pd.concat([df, metamodel_score_df], axis=1)
+    df.rename(columns={'rouge1': 'metamodel_rouge1',
+                       'rouge2': 'metamodel_rouge2',
+                       'rougeL': 'metamodel_rougeL',
+                       'rougeLsum': 'metamodel_rougeLsum'}, inplace=True)
+
+    print('Calculating mean ... ')
+    print(df.filter(regex='rouge').mean())
 
     report = classification_report(best_model, recommended, target_names=['t5-article', 'hybrid-long', 'sumbasic', 'graph-based'])
     with open('classification_report.txt', 'w') as f:
